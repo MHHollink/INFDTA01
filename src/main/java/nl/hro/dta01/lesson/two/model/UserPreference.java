@@ -5,17 +5,17 @@ import java.util.Map;
 
 public class UserPreference {
 
-    Map<String, Double> ratings;
+    Map<Integer, Double> ratings;
 
     public UserPreference() {
         ratings = new HashMap<>();
     }
 
-    public Map<String, Double> getRatings() {
+    public Map<Integer, Double> getRatings() {
         return ratings;
     }
 
-    public void put(String key, double value) {
+    public void put(Integer key, double value) {
         ratings.put(key, value);
     }
 }

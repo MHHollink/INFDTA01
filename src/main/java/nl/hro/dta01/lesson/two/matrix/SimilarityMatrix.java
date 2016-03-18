@@ -17,11 +17,31 @@ public class SimilarityMatrix {
         // Singleton class
     }
 
-    /**
-     * TODO get matrix based on value set
-     */
-    public double calculateSimilarity(UserPreference a, UserPreference b) {
-        SimilarityStrategy similarityStrategy = new PearsonCoefficient();
+    public double calculateSimilarity(boolean dataIsComplete, UserPreference a, UserPreference b) {
+        SimilarityStrategy similarityStrategy;
+
+        if(!dataIsComplete) {
+            similarityStrategy = new CosineSimilarity();
+        } else {
+            similarityStrategy = new PearsonCoefficient();
+        }
+
+        return similarityStrategy.calculateSimilarity(a,b);
+    }
+
+    public double calculateSimilarityUsingGivenAlgoritm(boolean dataIsComplete, UserPreference a, UserPreference b, Class<? extends SimilarityStrategy> strategy) {
+        SimilarityStrategy similarityStrategy = null;
+
+        try {
+            similarityStrategy = strategy.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        if(similarityStrategy == null)
+            similarityStrategy = new CosineSimilarity();
 
         return similarityStrategy.calculateSimilarity(a,b);
     }

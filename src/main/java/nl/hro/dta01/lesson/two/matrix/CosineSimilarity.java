@@ -10,15 +10,19 @@ public class CosineSimilarity implements SimilarityStrategy {
     public double calculateSimilarity(UserPreference target, UserPreference other) {
         double a = 0, b = 0, c= 0;
         for (int i = 0; i < target.getRatings().size(); i++) {
-            String product = (String) target.getRatings().keySet().toArray()[i];
-
+            int product = (int) target.getRatings().keySet().toArray()[i];
             double x = target.getRatings().get(product);
-            double y = other.getRatings().get(product);
+            double y = 0;
 
-            a += x*y;
-            b += Math.pow(x,2);
-            c += Math.pow(y,2);
+            if(other.getRatings().get(product) != null) {
+                y = other.getRatings().get(product);
+            }
+
+            a += x * y;
+            b += Math.pow(x, 2);
+            c += Math.pow(y, 2);
         }
+
         return (a) / ( Math.sqrt(b)* Math.sqrt(c));
     }
 }
