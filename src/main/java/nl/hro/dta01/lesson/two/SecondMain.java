@@ -21,7 +21,7 @@ public class SecondMain {
     /**
      * Default settings
      */
-    public static final int DEFAULT_NUMBER_OF_NEAREST_NEIGHBOURS = 10;
+    public static final int DEFAULT_NUMBER_OF_NEAREST_NEIGHBOURS = 25;
     public static final int DEFAULT_TARGET_USER_ID = 186;
     public static final double DEFAULT_SIMILARITY_THRESHOLD = 0.35;
     private static final int DEFAULT_MAX_OF_PREDICTIONS = 8;
