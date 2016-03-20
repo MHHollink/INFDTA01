@@ -29,14 +29,12 @@ public class SimilarityMatrix {
         return similarityStrategy.calculateSimilarity(a,b);
     }
 
-    public double calculateSimilarityUsingGivenAlgoritm(boolean dataIsComplete, UserPreference a, UserPreference b, Class<? extends SimilarityStrategy> strategy) {
+    public double calculateSimilarityUsingGivenAlgorithm(boolean dataIsComplete, UserPreference a, UserPreference b, Class<? extends SimilarityStrategy> strategy) {
         SimilarityStrategy similarityStrategy = null;
 
         try {
             similarityStrategy = strategy.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
 

@@ -1,16 +1,20 @@
 package nl.hro.dta01.lesson.two.importer;
 
+import com.j256.ormlite.stmt.query.In;
 import nl.hro.dta01.lesson.two.model.UserPreference;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class UserItemDataImporter {
 
-    public static Map<Integer, UserPreference> ImportUserItemDataIntoUserPreferences(Map<Integer, UserPreference> userPreferences){
+    public static Map<Integer, UserPreference> ImportUserItemDataIntoUserPreferences(){
         String file = UserItemDataImporter.class.getClassLoader().getResource("userItem.data").getFile().replaceAll("%20"," ");
+
+        TreeMap<Integer,UserPreference> userPreferences = new TreeMap<>();
         try {
             Scanner fileScanner = new Scanner(new FileReader(file));
 
