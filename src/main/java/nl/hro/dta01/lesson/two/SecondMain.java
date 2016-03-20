@@ -89,7 +89,6 @@ public class SecondMain {
             if(prediction.getY() == 0)
                 continue;
 
-
             if (predictedRatings.size() == maxPredictions) { // If list is full
                 for (int i = 0; i < maxPredictions; i++) {
                     if (prediction.getY() > predictedRatings.get(i).getY()) { // If above threshold and higher than other similarity
@@ -100,11 +99,8 @@ public class SecondMain {
             } else { // If list is not full
                 predictedRatings.add(prediction);
             }
-
-
-
         }
-
+        Collections.sort(predictedRatings, (a, b) -> (a.getY() - b.getY() > 0) ? -1 : 1);
         return predictedRatings;
     }
 
