@@ -1,19 +1,13 @@
 package nl.hro.dta01.lesson.two;
 
-import com.j256.ormlite.stmt.query.In;
 import nl.hro.dta01.lesson.two.importer.MovieLensDataImporter;
-import nl.hro.dta01.lesson.two.importer.UserItemDataImporter;
 import nl.hro.dta01.lesson.two.matrix.SimilarityMatrix;
 import nl.hro.dta01.lesson.two.model.Tuple;
 import nl.hro.dta01.lesson.two.model.UserPreference;
 
 import java.util.*;
 
-/**
- * Created by Marcel on 20-3-2016.
- */
 public class SecondMain {
-
 
     /**
      * Map Containing the UserID as {@link Integer} and the ratings as {@link UserPreference}
@@ -72,11 +66,15 @@ public class SecondMain {
      *
      * Get a {@link List} of predicted ratings for the target user up to a maximum of predictions
      *
-     * @param targetUserID the user which we want the predctions for
-     * @param nearestNeighbours the nearest neighbours of the target user (probably gotten from {@link #getNearestNeighbours(int, int, double)} )
-     * @param maxPredictions the maximum amount of predictions
+     * @param targetUserID
+     *          the user which we want the predictions for
+     * @param nearestNeighbours
+     *          the nearest neighbours of the target user (probably gotten from {@link #getNearestNeighbours(int, int, double)} )
+     * @param maxPredictions
+     *          the maximum amount of predictions
      *
-     * @return a list of predictions in form of tuple. tuple contains x = Item Id, y = predicted rating
+     * @return
+     *          a list of predictions in form of tuple. tuple contains x = Item Id, y = predicted rating
      */
     private static List<Tuple<Integer, Double>> getPredictedRatings(int targetUserID, List<Tuple<Integer, Double>> nearestNeighbours, int maxPredictions) {
 
@@ -90,10 +88,10 @@ public class SecondMain {
             if(userPreferences.get(targetUserID).getRatings().containsKey(itemId))
                 continue; // skip rated item
 
-            // create tuple for a single predition
+            // create tuple for a single prediction
             Tuple<Integer, Double> prediction = new Tuple<>(
                     itemId, // save the item id
-                    getPredictedRatingForItem( // get the prediciton
+                    getPredictedRatingForItem( // get the prediction
                             nearestNeighbours,
                             itemId
                     )
@@ -120,7 +118,7 @@ public class SecondMain {
     /**
      * Get the predicted rating based of the ratings for this product by our nearest neighbours
      *
-     * @param nearestNeighbours a list of nearest neighbour tuples containing x = neighbour id, y = rating
+     * @param nearestNeighbours a list of nearest neighbour tuple's containing x = neighbour id, y = rating
      * @param itemId the item whe want to predict a rating for
      *
      * @return a rating for the item in form of a double
@@ -151,7 +149,6 @@ public class SecondMain {
         return prediction;
     }
 
-
     /**
      * Gets a set of users with their similarity in form of a {@link Tuple}
      *
@@ -166,7 +163,7 @@ public class SecondMain {
         // Create list which can be filled / returned with the given cap
         List<Tuple<Integer, Double>> nearestNeighbours = new ArrayList<>(numberOfNearestNeighbours);
 
-        // Loop over all users in the dataset
+        // Loop over all users in the data-set
         for (Integer currentNeighbourID : userPreferences.keySet()) {
 
             if (currentNeighbourID == targetUserID)
