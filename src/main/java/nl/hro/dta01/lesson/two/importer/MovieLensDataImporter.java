@@ -6,14 +6,16 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 /**
  * Created by Marcel on 20-3-2016.
  */
 public class MovieLensDataImporter {
 
-    public static Map<Integer, UserPreference> ImportUserItemDataIntoUserPreferences(Map<Integer, UserPreference> userPreferences){
+    public static Map<Integer, UserPreference> ImportUserItemDataIntoUserPreferences(){
         String file = UserItemDataImporter.class.getClassLoader().getResource("ml-100k/u.data").getFile().replaceAll("%20"," ");
+        TreeMap<Integer,UserPreference> userPreferences = new TreeMap<>();
         try {
             Scanner fileScanner = new Scanner(new FileReader(file));
 

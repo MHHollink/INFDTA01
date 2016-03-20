@@ -1,6 +1,5 @@
 package nl.hro.dta01.lesson.two;
 
-import nl.hro.dta01.lesson.two.importer.MovieLensDataImporter;
 import nl.hro.dta01.lesson.two.importer.UserItemDataImporter;
 import nl.hro.dta01.lesson.two.matrix.*;
 import nl.hro.dta01.lesson.two.model.Tuple;
@@ -24,17 +23,8 @@ public class Main {
                 similarityThreshold = Double.parseDouble(args[3]);
         }
 
-        userPrefrences = new TreeMap<>();
-        //userPrefrences = UserItemDataImporter.ImportUserItemDataIntoUserPreferences(userPrefrences);    // Loads the userItem.data file into the TreeMap
-        userPrefrences = MovieLensDataImporter.ImportUserItemDataIntoUserPreferences(userPrefrences);    // Loads the ml-100k/u.data file into the TreeMap
-
-        for (Integer key : userPrefrences.keySet()) {
-            System.out.println(
-                    String.format("User: %d, %s",key,userPrefrences.get(key))
-            );
-        }
-
-        System.exit(0);
+        userPrefrences = UserItemDataImporter.ImportUserItemDataIntoUserPreferences();    // Loads the userItem.data file into the TreeMap
+        //userPrefrences = MovieLensDataImporter.ImportUserItemDataIntoUserPreferences(userPrefrences);    // Loads the ml-100k/u.data file into the TreeMap
 
         /*
         Show the data for each user
@@ -98,7 +88,7 @@ public class Main {
         Calculate similarity between user 3 and 4 using Pearson Coefficient
          */
         System.out.println("Calculating the similarity between user 3 and 4 using the Pearson Coefficient algoritm");
-        double similarity = calculateSimilarityUsingGivenAlgoritm(3, 4, PearsonCoefficient.class);
+        double similarity = calculateSimilarityUsingGivenAlgorithm(3, 4, PearsonCoefficient.class);
         System.out.println("The similarity between user 3 and 4 is " + similarity);
 
         // Get 3 nearest neighbours for user 7 using the Pearson Coefficient
@@ -186,7 +176,7 @@ public class Main {
                 if(strategy == null)    // Use the strategy chosen by the program(Cosine for sparse data, Pearson otherwise)
                     similarity = calculateSimilarity(targetUser_id, (i));
                 else    // Use the strategy chosen by the user
-                    similarity = calculateSimilarityUsingGivenAlgoritm(targetUser_id, i, strategy);
+                    similarity = calculateSimilarityUsingGivenAlgorithm(targetUser_id, i, strategy);
                 System.out.println("Similarity between user " + targetUser_id + " and " + i + ": " + similarity);
 
                 if(similarity > threshold) {    // If the similarity is higher than the threshold, update the list
@@ -220,17 +210,17 @@ public class Main {
     }
 
     public static double calculateSimilarity(int userOne_id, int userTwo_id){
-        return calculateSimilarityUsingGivenAlgoritm(userOne_id, userTwo_id, null);
+        return calculateSimilarityUsingGivenAlgorithm(userOne_id, userTwo_id, null);
     }
 
-    public static double calculateSimilarityUsingGivenAlgoritm(int userOne_id, int userTwo_id, Class<? extends SimilarityStrategy> strategy){
+    public static double calculateSimilarityUsingGivenAlgorithm(int userOne_id, int userTwo_id, Class<? extends SimilarityStrategy> strategy){
         UserPreference personOne = userPrefrences.get(userOne_id);
         UserPreference personTwo = userPrefrences.get(userTwo_id);
 
         if(strategy == null)
             return SimilarityMatrix.getInstance().calculateSimilarity(dataIsComplete, personOne, personTwo);
         else
-            return SimilarityMatrix.getInstance().calculateSimilarityUsingGivenAlgoritm(dataIsComplete, personOne, personTwo, strategy);
+            return SimilarityMatrix.getInstance().calculateSimilarityUsingGivenAlgorithm(dataIsComplete, personOne, personTwo, strategy);
     }
 
     /*
