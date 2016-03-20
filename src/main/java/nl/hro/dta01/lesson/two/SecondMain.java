@@ -68,31 +68,41 @@ public class SecondMain {
         System.out.println(output);
     }
 
+    /**
+     *
+     * Get a {@link List} of predicted ratings for the target user up to a maximum of predictions
+     *
+     * @param targetUserID the user which we want the predctions for
+     * @param nearestNeighbours the nearest neighbours of the target user (probably gotten from {@link #getNearestNeighbours(int, int, double)} )
+     * @param maxPredictions the maximum amount of predictions
+     *
+     * @return a list of predictions in form of tuple. tuple contains x = Item Id, y = predicted rating
+     */
     private static List<Tuple<Integer, Double>> getPredictedRatings(int targetUserID, List<Tuple<Integer, Double>> nearestNeighbours, int maxPredictions) {
 
+        // a list of predictions with a maximum cap
         List<Tuple<Integer, Double>> predictedRatings = new ArrayList<>(maxPredictions);
 
+        // for each item in the data set
         for (Integer itemId : itemIds) {
 
+            // does the target user already rated it?
             if(userPreferences.get(targetUserID).getRatings().containsKey(itemId))
-                continue;
+                continue; // skip rated item
 
-
+            // create tuple for a single predition
             Tuple<Integer, Double> prediction = new Tuple<>(
-                    itemId,
-                    getPredictedRatingForItem(
+                    itemId, // save the item id
+                    getPredictedRatingForItem( // get the prediciton
                             nearestNeighbours,
                             itemId
                     )
             );
 
-            if(prediction.getY() == 0)
-                continue;
-
             if (predictedRatings.size() == maxPredictions) { // If list is full
                 for (int i = 0; i < maxPredictions; i++) {
-                    if (prediction.getY() > predictedRatings.get(i).getY()) { // If above threshold and higher than other similarity
-                        predictedRatings.set(i, prediction); // set neighbour to the new (better) neighbour
+                    if (prediction.getY() > predictedRatings.get(i).getY()) { // If rating is higher than one of the other items
+                        predictedRatings.set(i, prediction); // set prediction to the new (better) prediction
                         break;
                     }
                 }
@@ -100,17 +110,28 @@ public class SecondMain {
                 predictedRatings.add(prediction);
             }
         }
+
+        // Sort predictions for best on top
         Collections.sort(predictedRatings, (a, b) -> (a.getY() - b.getY() > 0) ? -1 : 1);
+
         return predictedRatings;
     }
 
+    /**
+     * Get the predicted rating based of the ratings for this product by our nearest neighbours
+     *
+     * @param nearestNeighbours a list of nearest neighbour tuples containing x = neighbour id, y = rating
+     * @param itemId the item whe want to predict a rating for
+     *
+     * @return a rating for the item in form of a double
+     */
     private static double getPredictedRatingForItem(List<Tuple<Integer, Double>> nearestNeighbours, int itemId) {
 
-        double maxInfluence = 0;
-        double prediction = 0;
+        double maxInfluence = 0; // to save the maximum of influence
+        double prediction = 0; // to save the prediction
 
         for (Tuple<Integer, Double> nearestNeighbour : nearestNeighbours) {
-            maxInfluence += nearestNeighbour.getY();
+            maxInfluence += nearestNeighbour.getY(); // add every neighbours similarity to the maximumInfluence
         }
 
         for (Tuple<Integer, Double> nearestNeighbour : nearestNeighbours) {
@@ -118,13 +139,13 @@ public class SecondMain {
             if ( userPreferences.get(nearestNeighbour.getX()).getRatings().get(itemId) == null ) {
                 // Some data needs to be modified since a user did not rate this item
                 maxInfluence -= nearestNeighbour.getY();
-                continue;
+                continue; // continue to next loop, this neighbour can't provide us with more information
             }
 
-            double rating = userPreferences.get(nearestNeighbour.getX()).getRatings().get(itemId);
-            double similarity = nearestNeighbour.getY();
+            double rating = userPreferences.get(nearestNeighbour.getX()).getRatings().get(itemId); // save neighbour rating for item we want to predict
+            double similarity = nearestNeighbour.getY(); // save similarity
 
-            prediction += normalize(similarity,maxInfluence) * rating;
+            prediction += normalize(similarity,maxInfluence) * rating; // get a weighted rating and it to the total of the prediction
         }
 
         return prediction;
@@ -137,6 +158,7 @@ public class SecondMain {
      * @param targetUserID The target user of which the nearest neighbours are wanted
      * @param numberOfNearestNeighbours The size of the List of neighbours that is returned
      * @param threshold the threshold that is used to see if the neighbour is near enough for further calculation
+     *
      * @return List of UserId, Similarity
      */
     private static List<Tuple<Integer, Double>> getNearestNeighbours(int targetUserID, int numberOfNearestNeighbours, double threshold) {
