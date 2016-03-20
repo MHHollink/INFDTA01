@@ -126,6 +126,7 @@ public class SecondMain {
 
         double maxInfluence = 0; // to save the maximum of influence
         double prediction = 0; // to save the prediction
+        int predictedBy = nearestNeighbours.size();
 
         for (Tuple<Integer, Double> nearestNeighbour : nearestNeighbours) {
             maxInfluence += nearestNeighbour.getY(); // add every neighbours similarity to the maximumInfluence
@@ -136,6 +137,7 @@ public class SecondMain {
             if ( userPreferences.get(nearestNeighbour.getX()).getRatings().get(itemId) == null ) {
                 // Some data needs to be modified since a user did not rate this item
                 maxInfluence -= nearestNeighbour.getY();
+                predictedBy --;
                 continue; // continue to next loop, this neighbour can't provide us with more information
             }
 
@@ -144,6 +146,8 @@ public class SecondMain {
 
             prediction += normalize(similarity,maxInfluence) * rating; // get a weighted rating and it to the total of the prediction
         }
+
+        if (predictedBy <= 2) return  0; // seems like only 1 user predicted this rating... this is not valid!
 
         return prediction;
     }
