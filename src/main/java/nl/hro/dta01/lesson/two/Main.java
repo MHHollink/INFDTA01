@@ -1,6 +1,7 @@
 package nl.hro.dta01.lesson.two;
 
 import nl.hro.dta01.lesson.two.importer.MovieLensDataImporter;
+import nl.hro.dta01.lesson.two.importer.UserItemDataImporter;
 import nl.hro.dta01.lesson.two.matrix.*;
 import nl.hro.dta01.lesson.two.model.Tuple;
 import nl.hro.dta01.lesson.two.model.UserPreference;
@@ -15,14 +16,8 @@ public class Main {
     public static void main(String[] args) {
         dataIsComplete = true;
 
-        //userPreferences = UserItemDataImporter.ImportUserItemDataIntoUserPreferences();    // Loads the userItem.data file into the TreeMap
-        userPreferences = MovieLensDataImporter.ImportUserItemDataIntoUserPreferences();    // Loads the ml-100k/u.data file into the TreeMap
-
-        for (Integer i : userPreferences.keySet() ) {
-            System.out.println(userPreferences.get(i));
-        }
-
-        System.exit(0);
+        userPreferences = UserItemDataImporter.ImportUserItemDataIntoUserPreferences();    // Loads the userItem.data file into the TreeMap
+        //userPreferences = MovieLensDataImporter.ImportUserItemDataIntoUserPreferences();    // Loads the ml-100k/u.data file into the TreeMap
 
         /*
         Show the data for each user
