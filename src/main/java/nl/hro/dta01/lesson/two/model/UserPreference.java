@@ -18,4 +18,9 @@ public class UserPreference {
     public void put(Integer key, double value) {
         ratings.put(key, value);
     }
+
+    @Override
+    public String toString() {
+        return "ratings=" + ratings;
+    }
 }
