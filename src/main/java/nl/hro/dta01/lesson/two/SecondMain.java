@@ -29,7 +29,8 @@ public class SecondMain {
     /**
      * Entry point
      *
-     * @param args command line arguments
+     * @param args
+     *          command line arguments
      */
     public static void main(String[] args) {
         userPreferences = MovieLensDataImporter.ImportUserItemDataIntoUserPreferences();
@@ -38,10 +39,6 @@ public class SecondMain {
         for (int i = 1; i < 1683; i++) {
             itemIds.add(i);
         }
-
-        System.out.println(
-                String.format("Loaded data for %d users", userPreferences.size())
-        );
 
         // Get nearest neighbours
         List<Tuple<Integer, Double>> nearestNeighbours = getNearestNeighbours(
@@ -57,13 +54,15 @@ public class SecondMain {
                 DEFAULT_MAX_OF_PREDICTIONS
         );
 
-        String output = !predictedRatings.isEmpty() ? predictedRatings.toString() : "Sorry. We could not predict any ratings for this user.";
+        String output =
+                !predictedRatings.isEmpty() ?
+                        predictedRatings.toString() :
+                        "Sorry. We could not predict any ratings for this user.";
 
         System.out.println(output);
     }
 
     /**
-     *
      * Get a {@link List} of predicted ratings for the target user up to a maximum of predictions
      *
      * @param targetUserID
