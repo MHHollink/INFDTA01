@@ -119,7 +119,7 @@ public class SecondMain {
 
             if (predictedRatings.size() == maxPredictions) { // If list is full
                 for (int i = 0; i < maxPredictions; i++) {
-                    if (prediction.getY() > predictedRatings.get(i).getY()) { // If rating is higher than one of the other items
+                    if (prediction.getB() > predictedRatings.get(i).getB()) { // If rating is higher than one of the other items
                         predictedRatings.set(i, prediction); // set prediction to the new (better) prediction
                         break;
                     }
@@ -130,7 +130,7 @@ public class SecondMain {
         }
 
         // Sort predictions for best on top
-        Collections.sort(predictedRatings, (a, b) -> (a.getY() - b.getY() > 0) ? -1 : 1);
+        Collections.sort(predictedRatings, (a, b) -> (a.getB() - b.getB() > 0) ? -1 : 1);
 
         return predictedRatings;
     }
@@ -150,20 +150,20 @@ public class SecondMain {
         int predictedBy = nearestNeighbours.size();
 
         for (Tuple<Integer, Double> nearestNeighbour : nearestNeighbours) {
-            maxInfluence += nearestNeighbour.getY(); // add every neighbours similarity to the maximumInfluence
+            maxInfluence += nearestNeighbour.getB(); // add every neighbours similarity to the maximumInfluence
         }
 
         for (Tuple<Integer, Double> nearestNeighbour : nearestNeighbours) {
 
-            if ( userPreferences.get(nearestNeighbour.getX()).getRatings().get(itemId) == null ) {
+            if ( userPreferences.get(nearestNeighbour.getA()).getRatings().get(itemId) == null ) {
                 // Some data needs to be modified since a user did not rate this item
-                maxInfluence -= nearestNeighbour.getY();
+                maxInfluence -= nearestNeighbour.getB();
                 predictedBy --;
                 continue; // continue to next loop, this neighbour can't provide us with more information
             }
 
-            double rating = userPreferences.get(nearestNeighbour.getX()).getRatings().get(itemId); // save neighbour rating for item we want to predict
-            double similarity = nearestNeighbour.getY(); // save similarity
+            double rating = userPreferences.get(nearestNeighbour.getA()).getRatings().get(itemId); // save neighbour rating for item we want to predict
+            double similarity = nearestNeighbour.getB(); // save similarity
 
             prediction += normalize(similarity,maxInfluence) * rating; // get a weighted rating and it to the total of the prediction
         }
@@ -206,8 +206,8 @@ public class SecondMain {
 
             if (nearestNeighbours.size() == numberOfNearestNeighbours) { // If list is full
                 for (int i = 0; i < nearestNeighbours.size(); i++) {
-                    if (currentNeighbour.getY() > threshold &&
-                            currentNeighbour.getY() > nearestNeighbours.get(i).getY()) { // If above threshold and higher than other similarity
+                    if (currentNeighbour.getB() > threshold &&
+                            currentNeighbour.getB() > nearestNeighbours.get(i).getB()) { // If above threshold and higher than other similarity
                         nearestNeighbours.set(i, currentNeighbour); // set neighbour to the new (better) neighbour
                         break;
                     }
@@ -216,7 +216,7 @@ public class SecondMain {
                 nearestNeighbours.add(currentNeighbour); // Add to the list
             }
 
-            nearestNeighbours.sort((a, b) -> (a.getY() - b.getY() > 0) ? 1 : -1); // sort the list so the lowers similarity is on top.
+            nearestNeighbours.sort((a, b) -> (a.getB() - b.getB() > 0) ? 1 : -1); // sort the list so the lowers similarity is on top.
         }
 
         Collections.reverse(nearestNeighbours); // sort the list before returning so the highest similarity is on top

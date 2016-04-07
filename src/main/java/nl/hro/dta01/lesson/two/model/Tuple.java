@@ -1,35 +1,32 @@
 package nl.hro.dta01.lesson.two.model;
 
-public class Tuple<X,Y> {
-    private X x;
-    private Y y;
+public class Tuple<A,B> {
+    private A a;
+    private B b;
 
-    public Tuple(X x, Y y) {
-        this.x = x;
-        this.y = y;
+    public Tuple(A a, B b) {
+        this.a = a;
+        this.b = b;
     }
 
-    public X getX() {
-        return x;
+    public A getA() {
+        return a;
     }
 
-    public Y getY() {
-        return y;
+    public B getB() {
+        return b;
     }
 
-    public void setX(X x) {
-        this.x = x;
+    public void setA(A a) {
+        this.a = a;
     }
 
-    public void setY(Y y) {
-        this.y = y;
+    public void setB(B b) {
+        this.b = b;
     }
 
     @Override
     public String toString() {
-        return "{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "{a=" + a + ", b=" + b + "}";
     }
 }

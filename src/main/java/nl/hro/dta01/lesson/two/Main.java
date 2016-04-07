@@ -1,6 +1,5 @@
 package nl.hro.dta01.lesson.two;
 
-import nl.hro.dta01.lesson.two.importer.MovieLensDataImporter;
 import nl.hro.dta01.lesson.two.importer.UserItemDataImporter;
 import nl.hro.dta01.lesson.two.matrix.*;
 import nl.hro.dta01.lesson.two.model.Tuple;
@@ -54,7 +53,7 @@ public class Main {
         List<Tuple<Integer, Double>> similaritiesToTargetUser = getNearestNeighboursUsingAlgoritm(7, 3, 0.35, PearsonCoefficient.class);
         System.out.println("The 3 nearest neighbours are:");
         for (Tuple<Integer, Double> aSimilaritiesToTargetUser : similaritiesToTargetUser) {
-            System.out.println("\t" + aSimilaritiesToTargetUser.getX() + ": " + aSimilaritiesToTargetUser.getY());
+            System.out.println("\t" + aSimilaritiesToTargetUser.getA() + ": " + aSimilaritiesToTargetUser.getB());
         }
 
         /*
@@ -64,7 +63,7 @@ public class Main {
         similaritiesToTargetUser = getNearestNeighboursUsingAlgoritm(7, 3, 0.35, EuclideanDistance.class);
         System.out.println("The 3 nearest neighbours are:");
         for (Tuple<Integer, Double> aSimilaritiesToTargetUser : similaritiesToTargetUser) {
-            System.out.println("\t" + aSimilaritiesToTargetUser.getX() + ": " + aSimilaritiesToTargetUser.getY());
+            System.out.println("\t" + aSimilaritiesToTargetUser.getA() + ": " + aSimilaritiesToTargetUser.getB());
         }
 
         /*
@@ -74,7 +73,7 @@ public class Main {
         similaritiesToTargetUser = getNearestNeighboursUsingAlgoritm(7, 3, 0.35, CosineSimilarity.class);
         System.out.println("The 3 nearest neighbours are:");
         for (Tuple<Integer, Double> aSimilaritiesToTargetUser : similaritiesToTargetUser) {
-            System.out.println("\t" + aSimilaritiesToTargetUser.getX() + ": " + aSimilaritiesToTargetUser.getY());
+            System.out.println("\t" + aSimilaritiesToTargetUser.getA() + ": " + aSimilaritiesToTargetUser.getB());
         }
 
         /*
@@ -88,7 +87,7 @@ public class Main {
         similaritiesToTargetUser = getNearestNeighboursUsingAlgoritm(7, 3, 0.35, PearsonCoefficient.class);
         System.out.println("The 3 nearest neighbours are:");
         for (Tuple<Integer, Double> aSimilaritiesToTargetUser : similaritiesToTargetUser) {
-            System.out.println("\t" + aSimilaritiesToTargetUser.getX() + ": " + aSimilaritiesToTargetUser.getY());
+            System.out.println("\t" + aSimilaritiesToTargetUser.getA() + ": " + aSimilaritiesToTargetUser.getB());
         }
         predictUserRatingForItem(7, similaritiesToTargetUser, userPreferences, 101);
         predictUserRatingForItem(7, similaritiesToTargetUser, userPreferences, 103);
@@ -98,7 +97,7 @@ public class Main {
         similaritiesToTargetUser = getNearestNeighboursUsingAlgoritm(4, 3, 0.35, PearsonCoefficient.class);
         System.out.println("The 3 nearest neighbours are:");
         for (Tuple<Integer, Double> aSimilaritiesToTargetUser : similaritiesToTargetUser) {
-            System.out.println("\t" + aSimilaritiesToTargetUser.getX() + ": " + aSimilaritiesToTargetUser.getY());
+            System.out.println("\t" + aSimilaritiesToTargetUser.getA() + ": " + aSimilaritiesToTargetUser.getB());
         }
 
         predictUserRatingForItem(4, similaritiesToTargetUser, userPreferences, 101);
@@ -135,7 +134,7 @@ public class Main {
     public static void predictUserRatingForItem(int targetUser_id, List<Tuple<Integer, Double>> similaritiesToTargetUser, Map<Integer, UserPreference> userPrefrences, int product_item) {
         System.out.println("The " + similaritiesToTargetUser.size() + " nearest neighbours are:");
         for (Tuple<Integer, Double> aSimilaritiesToTargetUser : similaritiesToTargetUser) {
-            System.out.println("\t" + aSimilaritiesToTargetUser.getX() + ": " + aSimilaritiesToTargetUser.getY());
+            System.out.println("\t" + aSimilaritiesToTargetUser.getA() + ": " + aSimilaritiesToTargetUser.getB());
         }
 
         // Get the ratings and similarities needed for the predicted rating calculation
@@ -167,7 +166,7 @@ public class Main {
 
                 if(similarity > threshold) {    // If the similarity is higher than the threshold, update the list
                     Optional<Tuple<Integer, Double>> firstZeroSimilarityInList =
-                            similaritiesToTargetUser.stream().filter((Tuple<Integer, Double> similarityToUserOne) -> similarityToUserOne.getY() == (double)-1).findFirst();
+                            similaritiesToTargetUser.stream().filter((Tuple<Integer, Double> similarityToUserOne) -> similarityToUserOne.getB() == (double)-1).findFirst();
 
                     try {
                         // Try to find the first zero similarity in the list and update it with the new similarity
@@ -175,16 +174,16 @@ public class Main {
                         similaritiesToTargetUser.set(similaritiesToTargetUser.indexOf(sim), new Tuple<>(i, similarity));    // Tuple parameters are: i -> user_id, similarity->similarity to the target user
                     } catch (NoSuchElementException e) {    // If there is no zero in the list, find the lowest similarity
                         Optional<Tuple<Integer, Double>> lowestSimilarityInList = similaritiesToTargetUser.stream().min((Tuple<Integer, Double> one, Tuple<Integer, Double> two) -> {
-                            if (one.getY() > two.getY()) {
+                            if (one.getB() > two.getB()) {
                                 return 1;
-                            } else if (two.getY() > one.getY()) {
+                            } else if (two.getB() > one.getB()) {
                                 return -1;
                             } else {
                                 return 0;
                             }
                         });
                         Tuple<Integer, Double> sim = lowestSimilarityInList.get();
-                        if (similarity > sim.getY()) // Update the similarity in the list if the calculated similarity is higher
+                        if (similarity > sim.getB()) // Update the similarity in the list if the calculated similarity is higher
                             similaritiesToTargetUser.set(similaritiesToTargetUser.indexOf(sim), new Tuple<>(i, similarity));
                     }
                 }
@@ -214,8 +213,8 @@ public class Main {
     public static double getPredictedRating(List<Tuple<Double, Double>> userRatings){
         double a = 0, b = 0;
         for (Tuple<Double, Double> userRating : userRatings) {
-            a += userRating.getY() * userRating.getX();
-            b += userRating.getY();
+            a += userRating.getB() * userRating.getA();
+            b += userRating.getB();
         }
         return a/b;
     }
@@ -227,8 +226,8 @@ public class Main {
         List<Tuple<Double, Double>> returnList = new ArrayList<>();
 
         for (Tuple<Integer, Double> aSimilaritiesToTargetUser : similaritiesToTargetUser) {
-            int user_id = aSimilaritiesToTargetUser.getX();
-            double similarityToUser = aSimilaritiesToTargetUser.getY();
+            int user_id = aSimilaritiesToTargetUser.getA();
+            double similarityToUser = aSimilaritiesToTargetUser.getB();
             if (userPrefrences.get(user_id).getRatings().get(product_id) != null) {
                 double user_rating = userPrefrences.get(user_id).getRatings().get(product_id);
 
