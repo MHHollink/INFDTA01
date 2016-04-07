@@ -19,12 +19,16 @@ public class SecondMain {
     private static Set<Integer> itemIds;
 
     /**
-     * Default settings
+     * settings
      */
     public static final int DEFAULT_NUMBER_OF_NEAREST_NEIGHBOURS = 25;
+    private static int number_of_nearest_neighbours;
     public static final int DEFAULT_TARGET_USER_ID = 186;
+    private static int target_user_id;
     public static final double DEFAULT_SIMILARITY_THRESHOLD = 0.35;
-    private static final int DEFAULT_MAX_OF_PREDICTIONS = 8;
+    private static double similarity_threshold;
+    public static final int DEFAULT_MAX_OF_PREDICTIONS = 8;
+    private static int max_number_of_predictions;
 
     /**
      * Entry point
@@ -35,6 +39,23 @@ public class SecondMain {
     public static void main(String[] args) {
         userPreferences = MovieLensDataImporter.ImportUserItemDataIntoUserPreferences();
         itemIds = new HashSet<>();
+
+
+        number_of_nearest_neighbours = DEFAULT_NUMBER_OF_NEAREST_NEIGHBOURS;
+        target_user_id = DEFAULT_TARGET_USER_ID;
+        similarity_threshold = DEFAULT_SIMILARITY_THRESHOLD;
+        max_number_of_predictions = DEFAULT_MAX_OF_PREDICTIONS;
+        if(args != null) {
+
+            if(args[0] != null ) {
+                number_of_nearest_neighbours = Integer.parseInt(args[0]);
+            }
+
+
+
+        }
+
+
 
         for (int i = 1; i < 1683; i++) {
             itemIds.add(i);
