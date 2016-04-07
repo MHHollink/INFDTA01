@@ -7,9 +7,6 @@ public class DeviationModel {
     private int raters;
     private double div;
 
-    public DeviationModel() {
-    }
-
     public DeviationModel(int itemIdA, int itemIdB, int raters, double div) {
         this.itemIdA = itemIdA;
         this.itemIdB = itemIdB;
