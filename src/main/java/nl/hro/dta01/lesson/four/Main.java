@@ -21,7 +21,7 @@ public class Main {
         long end;   // used for timers
 
         start = System.currentTimeMillis(); // START LOADING
-        Map<Integer, User> userRatings = loadDataUserItem();
+        Map<Integer, User> userRatings = loadDataMovieLens();
         end = System.currentTimeMillis();   // ENDED LOADING
 
         System.out.println( String.format("loading data took %f seconds", (end-start) / 1000.0 ) );
@@ -29,23 +29,19 @@ public class Main {
         start = System.currentTimeMillis(); // START CALCULATING DEVIATION
         List<DeviationModel> deviationModels = new ArrayList<>();
 
-        for (int y = 1; y <= userRatings.size(); y++) {
-
-            Parallel.For(userRatings.keySet(), id -> {
-
-            });
-
-            for (int x = 1; x <= userRatings.size(); x++) {
-                if(y != x ) {
-                    DeviationModel z = calculateDeviation(x, y, getRatings(userRatings, x, y));
-                    if( z.getRaters() != 0 ) {
+        //for (int y = 1; y <= userRatings.size(); y++) {
+        for(Integer id : userRatings.keySet()) {
+            Parallel.For(userRatings.keySet(), pid -> {
+                if(id.intValue() != pid.intValue()) {
+                    DeviationModel z = calculateDeviation(pid, id, getRatings(userRatings, pid, id));
+                    if (z.getRaters() != 0) {
                         deviationModels.add(
-                             // x + "-" + y,  // Use as key in map, commented for list
+                                // x + "-" + y,  // Use as key in map, commented for list
                                 z
                         );
                     }
                 }
-            }
+            });
         }
         end = System.currentTimeMillis();  // ENDED CALCULATING DEVIATION
 
