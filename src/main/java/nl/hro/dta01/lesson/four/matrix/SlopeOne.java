@@ -52,7 +52,7 @@ public class SlopeOne {
             Tuple<Integer, Double> rating = uRatings.get(i);
             DeviationModel deviationModel = deviationModels.get(i);
 
-            numerator   += (rating.getA() + deviationModel.getDiv()) * deviationModel.getRaters();
+            numerator   += (rating.getB() + deviationModel.getDiv()) * deviationModel.getRaters();
             denominator += deviationModel.getRaters();
         }
 
