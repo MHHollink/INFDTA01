@@ -8,13 +8,12 @@ import java.util.List;
 
 public class SlopeOne {
 
-    @SafeVarargs
     public static DeviationModel calculateDeviation(int a,
                                                     int b,
-                                                    Tuple<Double, Double>... ratings)
+                                                    List<Tuple<Double, Double>> ratings)
     {
         double numerator = 0;
-        int denominator  = ratings.length;
+        int denominator  = ratings.size();
         for (Tuple<Double, Double> rating : ratings) {
             numerator += ( rating.getA() - rating.getB() );
         }
@@ -26,12 +25,11 @@ public class SlopeOne {
         );
     }
 
-    @SafeVarargs
     public static DeviationModel updateDeviationModel(DeviationModel model,
-                                                      Tuple<Double, Double>... ratings)
+                                                      List<Tuple<Double, Double>> ratings)
     {
         double numerator = model.getDiv() * model.getRaters();
-        int denominator  = model.getRaters() + ratings.length;
+        int denominator  = model.getRaters() + ratings.size();
         for (Tuple<Double, Double> rating : ratings) {
             numerator += ( rating.getA() - rating.getB() );
         }

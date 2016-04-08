@@ -45,4 +45,12 @@ public class DeviationModel {
     public void setItemIdB(int itemIdB) {
         this.itemIdB = itemIdB;
     }
+
+    @Override
+    public String toString() {
+        return "DeviationModel{" +
+                "raters=" + raters +
+                ", div=" + div +
+                '}';
+    }
 }
