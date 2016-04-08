@@ -8,6 +8,7 @@ import nl.hro.dta01.lesson.two.model.Tuple;
 import java.util.*;
 
 import static nl.hro.dta01.lesson.four.Importer.loadDataMovieLens;
+import static nl.hro.dta01.lesson.four.Importer.loadDataUserItem;
 import static nl.hro.dta01.lesson.four.matrix.SlopeOne.calculateDeviation;
 import static nl.hro.dta01.lesson.four.matrix.SlopeOne.predictRating;
 
@@ -15,50 +16,37 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Map<Integer, User> userRatings = loadDataMovieLens();
+        long start; // used for timers
+        long end;   // used for timers
 
-//        DeviationModel AB = calculateDeviation(1,2,new Tuple<>(5.0, 3.0),new Tuple<>(3.0, 4.0),new Tuple<>(4.0, 2.0));
-//        DeviationModel AC = calculateDeviation(1,3,new Tuple<>(5.0, 2.0), new Tuple<>(4.0, 3.0));
+        start = System.currentTimeMillis(); // START LOADING
+        Map<Integer, User> userRatings = loadDataUserItem();
+        end = System.currentTimeMillis();   // ENDED LOADING
 
-//        System.out.println(
-//            predictRating(
-//                    new ArrayList<Tuple<Integer, Double>>() {
-//                        {
-//                            add(new Tuple<>(2, 2.0));
-//                            add(new Tuple<>(3, 5.0));
-//                        }
-//                    },
-//                    new ArrayList<DeviationModel>() {
-//                        {
-//                            add(AB);
-//                            add(AC);
-//                        }
-//                    }
-//            )
-//        );
+        System.out.println( String.format("loading data took %f seconds", (end-start) / 1000.0 ) );
 
-        long start = System.currentTimeMillis();
-
-        Map<String,DeviationModel> deviationModels = new HashMap<>();
+        start = System.currentTimeMillis(); // START CALCULATING DEVIATION
+        List<DeviationModel> deviationModels = new ArrayList<>();
         for (int y = 1; y <= userRatings.size(); y++) {
             for (int x = 1; x <= userRatings.size(); x++) {
                 if(y != x ) {
                     DeviationModel z = calculateDeviation(x, y, getRatings(userRatings, x, y));
                     if( z.getRaters() != 0 ) {
-                        deviationModels.put( x + "-" + y, z );
+                        deviationModels.add(
+                             // x + "-" + y,  // Use as key in map, commented for list
+                                z
+                        );
                     }
                 }
             }
         }
-
-        long end = System.currentTimeMillis();
+        end = System.currentTimeMillis();  // ENDED CALCULATING DEVIATION
 
         System.out.println( String.format("calculating divs took %f seconds", (end-start) / 1000.0 ) );
-
         /**
          * todo : SlopeOne#predictRating(java.util.List, java.util.List)
          */
-
+        //predictRating()
     }
 
     private static List<Tuple<Double, Double>> getRatings (Map<Integer, User> data, int itemIdA, int itemIdB) {
