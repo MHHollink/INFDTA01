@@ -8,6 +8,12 @@ import java.util.List;
 
 public class SlopeOne {
 
+    /**
+     * @param a         = The item id for product A
+     * @param b         = The item id for product B
+     * @param ratings   = A list of all the ratings for <A, B>
+     * @return The {@link DeviationModel} for A B with created with {@link DeviationModel#DeviationModel(int, int, int, double)}
+     */
     public static DeviationModel calculateDeviation(int a,
                                                     int b,
                                                     List<Tuple<Double, Double>> ratings)
@@ -25,6 +31,11 @@ public class SlopeOne {
         );
     }
 
+    /**
+     * @param model     = the current deviation model for products A and B
+     * @param ratings   = the list of added ratings
+     * @return          = an updated {@link DeviationModel}
+     */
     public static DeviationModel updateDeviationModel(DeviationModel model,
                                                       List<Tuple<Double, Double>> ratings)
     {
@@ -41,6 +52,11 @@ public class SlopeOne {
         );
     }
 
+    /**
+     * @param uRatings              = Ratings of the target user
+     * @param deviationModels       = {@link DeviationModel}'s of all the i items the target item
+     * @return a {@link Double} predicting the rating of the targeted item
+     */
     public static double predictRating(List<Tuple<Integer, Double>> uRatings, List<DeviationModel> deviationModels) {
 
         double numerator = 0;

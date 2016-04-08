@@ -11,6 +11,11 @@ import java.util.Scanner;
 
 public class Importer {
 
+    /**
+     * Loading file 'userItem.data'
+     *
+     * @return      = Map with id of the user and a {@link User} object containing {@link User#ratings}
+     */
     public static Map<Integer, User> loadDataUserItem(){
         String file;
         try {
@@ -32,6 +37,11 @@ public class Importer {
         }
     }
 
+    /**
+     * Loading file 'ml-100k/u.data'
+     *
+     * @return      = Map with id of the user and a {@link User} object containing {@link User#ratings}
+     */
     public static Map<Integer, User> loadDataMovieLens(){
         String file;
         try {
@@ -53,6 +63,14 @@ public class Importer {
         }
     }
 
+    /**
+     * @param file          = String value of file path
+     * @param userIds       = place in the file specified as user id
+     * @param productIds    = place in the file specified as product id
+     * @param ratings       = place in the file specified as ratings
+     * @return              = Map with id of the user and a {@link User} object containing {@link User#ratings}
+     * @throws FileNotFoundException
+     */
     private static Map<Integer, User> readData(String file, int userIds, int productIds, int ratings) throws FileNotFoundException {
         Map<Integer, User> users = new HashMap<>();
         Scanner fileScanner = new Scanner(new FileReader(file));
