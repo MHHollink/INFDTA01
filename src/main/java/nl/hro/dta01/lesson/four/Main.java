@@ -1,6 +1,7 @@
 package nl.hro.dta01.lesson.four;
 
 
+import com.tantaman.commons.concurrent.Parallel;
 import nl.hro.dta01.lesson.four.model.DeviationModel;
 import nl.hro.dta01.lesson.four.model.User;
 import nl.hro.dta01.lesson.two.model.Tuple;
@@ -27,7 +28,13 @@ public class Main {
 
         start = System.currentTimeMillis(); // START CALCULATING DEVIATION
         List<DeviationModel> deviationModels = new ArrayList<>();
+
         for (int y = 1; y <= userRatings.size(); y++) {
+
+            Parallel.For(userRatings.keySet(), id -> {
+
+            });
+
             for (int x = 1; x <= userRatings.size(); x++) {
                 if(y != x ) {
                     DeviationModel z = calculateDeviation(x, y, getRatings(userRatings, x, y));
