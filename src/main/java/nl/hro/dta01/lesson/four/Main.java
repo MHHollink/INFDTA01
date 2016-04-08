@@ -18,23 +18,27 @@ public class Main {
 
     public static void main(String[] args) {
 
+        List<Integer> itemDataSet = new ArrayList<>();
+        for (int i = 1; i < 1682; i++) {
+        //for (int i = 101; i < 106; i++) {
+            itemDataSet.add(i);
+        }
+
         long start; // used for timers
         long end;   // used for timers
 
         start = System.currentTimeMillis(); // START LOADING
         Map<Integer, User> userRatings = loadDataMovieLens();
         end = System.currentTimeMillis();   // ENDED LOADING
-
         System.out.println( String.format("loading data took %f seconds", (end-start) / 1000.0 ) );
 
-        start = System.currentTimeMillis(); // START CALCULATING DEVIATION
         Map<String, DeviationModel> deviationModels = new ConcurrentHashMap<>();
-
-        for(Integer id : userRatings.keySet()) {
-            Parallel.For(userRatings.keySet(), pid -> {
+        start = System.currentTimeMillis(); // START CALCULATING DEVIATION
+        for(Integer id : itemDataSet) {
+            Parallel.For(itemDataSet, pid -> {
                 if(id.intValue() != pid.intValue()) {
                     DeviationModel z = calculateDeviation(pid, id, getRatings(userRatings, pid, id));
-                    if (z.getRaters() < 2) {
+                    if (z.getRaters() != 0) {
                         deviationModels.put(
                                 id + "-" + pid,  // Use as key in map, commented for list
                                 z
@@ -43,12 +47,10 @@ public class Main {
                 }
             });
         }
-
         end = System.currentTimeMillis();  // ENDED CALCULATING DEVIATION
-
         System.out.println( String.format("calculating divs took %f seconds", (end-start) / 1000.0 ) );
 
-
+        System.out.println(deviationModels.size());
     }
 
     /**
