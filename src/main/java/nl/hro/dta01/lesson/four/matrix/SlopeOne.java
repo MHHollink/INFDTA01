@@ -1,6 +1,5 @@
 package nl.hro.dta01.lesson.four.matrix;
 
-import com.j256.ormlite.stmt.query.In;
 import nl.hro.dta01.lesson.four.model.DeviationModel;
 import nl.hro.dta01.lesson.two.model.Tuple;
 

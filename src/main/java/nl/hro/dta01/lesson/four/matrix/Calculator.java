@@ -4,6 +4,7 @@ import nl.hro.dta01.lesson.four.model.DeviationModel;
 import nl.hro.dta01.lesson.four.model.User;
 import nl.hro.dta01.lesson.two.model.Tuple;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,12 +19,23 @@ public class Calculator {
      * @param targetUser    = the target user with his ratings
      * @param deviations    = list of all deviations
      * @return
+     *          double prediction for specified item
      */
     public static double calculate(int itemId, User targetUser, Map<String, DeviationModel> deviations) {
 
+        List<DeviationModel> dev = new ArrayList<>();
 
+        for (String item : deviations.keySet()) {
 
-        return 0;
+            if (Integer.parseInt(item.split("-")[0]) == (itemId)) {
+                dev.add(deviations.get(item));
+            }
+        }
+
+        return SlopeOne.predictRating(
+                    targetUser.getRatings(),
+                    dev
+        );
     }
 
     /**
@@ -36,7 +48,23 @@ public class Calculator {
      */
     public static List<Tuple<Integer, Double>> calculate(User targetUser, Map<String, DeviationModel> deviations, int max) {
 
-        return null;
+        List<Tuple<Integer, Double>> predictions = new ArrayList<>();
+
+        for (int i = 0; i < targetUser.getRatings().size(); i++) {
+            double prediction = calculate(
+                    targetUser.getRatings().get(i).getA(),
+                    targetUser,
+                    deviations
+            );
+            predictions.add(
+                    new Tuple<>(
+                            targetUser.getRatings().get(i).getA(),
+                            prediction
+                    )
+            );
+        }
+
+        return predictions;
     }
 
 }
