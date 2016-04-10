@@ -115,17 +115,7 @@ public class Main {
         User user = data.get(userId);
         user.addRating(itemId, rating);
 
-        deviations.entrySet().stream().filter(entry -> {
-            if ((entry.getValue().getItemIdA() == itemId) || (entry.getValue().getItemIdB() == itemId)) {
-                if (user.hasRated(entry.getValue().getItemIdA()) && user.hasRated(entry.getValue().getItemIdB())) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }).forEach(entry -> {
+        deviations.entrySet().stream().filter(entry -> ((entry.getValue().getItemIdA() == itemId) || (entry.getValue().getItemIdB() == itemId)) && user.hasRated(entry.getValue().getItemIdA()) && user.hasRated(entry.getValue().getItemIdB())).forEach(entry -> {
             List<Tuple<Double, Double>> newRatings = new ArrayList<>();
             double ratingItemA = user.getRatingForItem(entry.getValue().getItemIdA());
             double ratingItemB = user.getRatingForItem(entry.getValue().getItemIdB());
