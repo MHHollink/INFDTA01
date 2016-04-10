@@ -46,22 +46,15 @@ public class Calculator {
      * @return
      *          list of tuple's containing item id en predicted rating
      */
-    public static List<Tuple<Integer, Double>> calculate(User targetUser, Map<String, DeviationModel> deviations, int max) {
+    public static List<Tuple<Integer, Double>> calculate(User targetUser, Map<String, DeviationModel> deviations, List<Integer> itemIds, int max) {
 
         List<Tuple<Integer, Double>> predictions = new ArrayList<>();
 
-        for (int i = 0; i < targetUser.getRatings().size(); i++) {
-            double prediction = calculate(
-                    targetUser.getRatings().get(i).getA(),
-                    targetUser,
-                    deviations
-            );
-            predictions.add(
-                    new Tuple<>(
-                            targetUser.getRatings().get(i).getA(),
-                            prediction
-                    )
-            );
+        for (Integer i : itemIds) {
+            if(targetUser.hasRated(i)) continue;
+
+            double p = calculate(i, targetUser, deviations);
+            predictions.add(new Tuple<>(i,p));
         }
 
         return predictions;
