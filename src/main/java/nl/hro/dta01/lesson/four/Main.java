@@ -4,7 +4,7 @@ package nl.hro.dta01.lesson.four;
 import nl.hro.dta01.lesson.four.matrix.Calculator;
 import nl.hro.dta01.lesson.four.model.DeviationModel;
 import nl.hro.dta01.lesson.four.model.User;
-import nl.hro.dta01.lesson.two.model.Tuple;
+import nl.hro.dta01.lesson.four.model.Tuple;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static java.lang.String.format;
 import static nl.hro.dta01.lesson.four.Importer.loadDataMovieLens;
-import static nl.hro.dta01.lesson.four.Importer.loadDataUserItem;
 import static nl.hro.dta01.lesson.four.matrix.SlopeOne.calculateDeviation;
 import static nl.hro.dta01.lesson.four.matrix.SlopeOne.updateDeviationModel;
 
@@ -40,7 +39,7 @@ public class Main {
 
         userRatings = loadDataMovieLens();
         end = System.currentTimeMillis();   // ENDED LOADING
-        System.out.println( format("loading took %f seconds", (end-start) / 1000.0 ) );
+        System.out.println( format("loading took %.2f seconds", (end-start) / 1000.0 ) );
 
         deviationModels = new ConcurrentHashMap<>();
         System.out.println( "calculating..." );
@@ -56,7 +55,7 @@ public class Main {
                     });
                 });
         end = System.currentTimeMillis();  // ENDED CALCULATING DEVIATION
-        System.out.println(format("calculating took %f seconds", (end-start) / 1000.0 ) );
+        System.out.println(format("calculating took %.2f seconds", (end-start) / 1000.0 ) );
 
         /** SMALL SET **/
 //        System.out.println(format("We predict that user %d would rate item %d with a %f rating",7,101,predictOne(7,101)));
@@ -76,7 +75,7 @@ public class Main {
         start = System.currentTimeMillis();
         List< Tuple<Integer, Double>> predictions = predictList(186, 5);
         end = System.currentTimeMillis();
-        System.out.println(format("predicting took %f seconds", (end-start) / 1000.0 ) );
+        System.out.println(format("predicting took %.2f seconds", (end-start) / 1000.0 ) );
         System.out.println(predictions);
 
 

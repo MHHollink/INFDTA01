@@ -1,7 +1,7 @@
 package nl.hro.dta01.lesson.four.matrix;
 
 import nl.hro.dta01.lesson.four.model.DeviationModel;
-import nl.hro.dta01.lesson.two.model.Tuple;
+import nl.hro.dta01.lesson.four.model.Tuple;
 
 import java.util.List;
 

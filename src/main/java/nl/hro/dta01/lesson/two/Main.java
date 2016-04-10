@@ -2,7 +2,7 @@ package nl.hro.dta01.lesson.two;
 
 import nl.hro.dta01.lesson.two.importer.UserItemDataImporter;
 import nl.hro.dta01.lesson.two.matrix.*;
-import nl.hro.dta01.lesson.two.model.Tuple;
+import nl.hro.dta01.lesson.four.model.Tuple;
 import nl.hro.dta01.lesson.two.model.UserPreference;
 
 import java.util.*;

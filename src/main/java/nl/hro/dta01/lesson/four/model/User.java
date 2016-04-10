@@ -1,7 +1,5 @@
 package nl.hro.dta01.lesson.four.model;
 
-import nl.hro.dta01.lesson.two.model.Tuple;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

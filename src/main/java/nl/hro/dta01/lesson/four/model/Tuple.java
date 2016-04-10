@@ -1,4 +1,4 @@
-package nl.hro.dta01.lesson.two.model;
+package nl.hro.dta01.lesson.four.model;
 
 public class Tuple<A,B> {
     private A a;
