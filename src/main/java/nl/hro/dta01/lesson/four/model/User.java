@@ -1,6 +1,10 @@
 package nl.hro.dta01.lesson.four.model;
 
+import nl.hro.dta01.lesson.two.model.Tuple;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class User {
@@ -32,6 +36,21 @@ public class User {
 
     public double getRatingForItem(Integer itemId) {
         return ratings.get(itemId);
+    }
+
+    public List<Tuple<Integer, Double>> getRatings() {
+        List<Tuple<Integer, Double>> r = new ArrayList<>();
+
+        for (Integer item : ratings.keySet()) {
+            Tuple<Integer, Double> t =
+                    new Tuple<>(
+                            item,
+                            getRatingForItem(item)
+                    );
+            r.add(t);
+        }
+
+        return r;
     }
 
     @Override

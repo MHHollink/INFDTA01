@@ -65,7 +65,7 @@ public class Main {
      * @return
      *          A list of {@link Tuple}'s the ratings of one user for both item A and item B
      */
-    private static List<Tuple<Double, Double>> getRatings (Map<Integer, User> data, int itemIdA, int itemIdB) {
+    public static List<Tuple<Double, Double>> getRatings (Map<Integer, User> data, int itemIdA, int itemIdB) {
         Iterator<Integer> keyItr = data.keySet().iterator();
         List<Tuple<Double,Double>> ratings = new ArrayList<>();
         while (keyItr.hasNext()) {
