@@ -5,6 +5,7 @@ import nl.hro.dta01.lesson.four.model.User;
 import nl.hro.dta01.lesson.two.model.Tuple;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.sort;
 
@@ -26,17 +27,8 @@ public class Calculator {
         List<DeviationModel> dev = new ArrayList<>();
         List<Tuple<Integer, Double>> ratings = targetUser.getRatings();
 
-        for (String item : deviations.keySet()) {
-
-            if (
-                    Integer.parseInt( item.split("-")[0] ) == (itemId) &&
-                    targetUser.hasRated(Integer.parseInt( item.split("-")[1] ))) {
-                dev.add(deviations.get(item));
-            }
-        }
-
-        sort(dev, (a, b) -> a.getItemIdA() > b.getItemIdA() ? 1 : -1);
-        sort(ratings, (a, b) -> a.getA() > b.getA() ? 1 : -1);
+        dev.addAll(deviations.keySet().stream().filter(item -> Integer.parseInt(item.split("-")[0]) == (itemId) &&
+                targetUser.hasRated(Integer.parseInt(item.split("-")[1]))).map(deviations::get).collect(Collectors.toList()));
 
         return SlopeOne.predictRating(
                     ratings,
@@ -53,24 +45,18 @@ public class Calculator {
      *          list of tuple's containing item id en predicted rating
      */
     public static List<Tuple<Integer, Double>> calculate(User targetUser, Map<String, DeviationModel> deviations, List<Integer> itemIds, int max) {
-
         List<Tuple<Integer, Double>> predictions = new ArrayList<>();
-
         for (Integer i : itemIds) {
             if(targetUser.hasRated(i)) continue;
-
             double p = calculate(i, targetUser, deviations);
-
             if(predictions.size() == max) {
-                for (int j = 0; j < predictions.size(); j++) {
-                    if(predictions.get(j).getB() < p) {
-                        predictions.set(j, new Tuple<>(i,p));
-                    }
-                }
-            } else
+                for (int j = 0; j < predictions.size(); j++)
+                    if (predictions.get(j).getB() < p)
+                        predictions.set(j, new Tuple<>(i, p));
+            }
+            else
                 predictions.add(new Tuple<>(i,p));
         }
-
         return predictions;
     }
 

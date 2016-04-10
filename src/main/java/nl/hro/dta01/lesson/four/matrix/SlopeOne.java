@@ -22,12 +22,7 @@ public class SlopeOne {
         for (Tuple<Double, Double> rating : ratings) {
             numerator += ( rating.getA() - rating.getB() );
         }
-        return new DeviationModel(
-                a,
-                b,
-                denominator,
-                numerator/denominator
-        );
+        return denominator == 0 ? new DeviationModel(a,b,denominator,0) : new DeviationModel(a, b, denominator, numerator/denominator);
     }
 
     /**
