@@ -11,8 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static nl.hro.dta01.lesson.four.Importer.loadDataMovieLens;
 import static nl.hro.dta01.lesson.four.Importer.loadDataUserItem;
-import static nl.hro.dta01.lesson.four.matrix.SlopeOne.calculateDeviation;
-import static nl.hro.dta01.lesson.four.matrix.SlopeOne.predictRating;
+import static nl.hro.dta01.lesson.four.matrix.SlopeOne.*;
 
 public class Main {
 
@@ -45,6 +44,7 @@ public class Main {
                                     item + "-" + innerItem,  // Use as key in map, commented for list
                                     z
                             );
+                            System.out.println(item + "-" + innerItem + ": " + z.toString());
                         }
                     });
                 });
@@ -57,6 +57,8 @@ public class Main {
 
         System.out.println(predictions);
 
+        // Add new rating and update deviations
+        Map<String,DeviationModel> newDeviations = addRating(3,103,5.0, userRatings, deviationModels, itemDataSet);
     }
 
     /**
@@ -83,6 +85,37 @@ public class Main {
             }
         }
         return ratings;
+    }
+
+    public static Map<String, DeviationModel> addRating(int userId, int itemId, double rating, Map<Integer, User> data, Map<String, DeviationModel> deviations, List<Integer> itemDataset) {
+        Map<String, DeviationModel> newDeviationsModels = deviations;
+        System.out.println("============= updated deviationModels ===============");
+
+        User user = data.get(userId);
+        user.addRating(itemId, rating);
+
+        deviations.entrySet().stream().filter(entry -> {
+            if ((entry.getValue().getItemIdA() == itemId) || (entry.getValue().getItemIdB() == itemId)) {
+                if (user.hasRated(entry.getValue().getItemIdA()) && user.hasRated(entry.getValue().getItemIdB())) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }).forEach(entry -> {
+            List<Tuple<Double, Double>> newRatings = new ArrayList<>();
+            double ratingItemA = user.getRatingForItem(entry.getValue().getItemIdA());
+            double ratingItemB = user.getRatingForItem(entry.getValue().getItemIdB());
+
+            newRatings.add(new Tuple<>(ratingItemA, ratingItemB));
+
+            DeviationModel updatedDeviationModel = updateDeviationModel(entry.getValue(), newRatings);
+            newDeviationsModels.put(entry.getKey(), updatedDeviationModel);
+            System.out.println(entry.getValue().getItemIdA() + "-" + entry.getValue().getItemIdB() + ": " + updatedDeviationModel.toString());
+        });
+        return newDeviationsModels;
     }
 
 
