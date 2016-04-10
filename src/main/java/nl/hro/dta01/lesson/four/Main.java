@@ -1,8 +1,6 @@
 package nl.hro.dta01.lesson.four;
 
 
-import com.tantaman.commons.concurrent.Parallel;
-import nl.hro.dta01.lesson.four.matrix.Calculator;
 import nl.hro.dta01.lesson.four.model.DeviationModel;
 import nl.hro.dta01.lesson.four.model.User;
 import nl.hro.dta01.lesson.two.model.Tuple;
@@ -20,8 +18,8 @@ public class Main {
     public static void main(String[] args) {
 
         List<Integer> itemDataSet = new ArrayList<>();
-        //for (int i = 1; i < 1682; i++) {
-        for (int i = 101; i < 106; i++) {
+        for (int i = 1; i < 1682; i++) {
+        //for (int i = 101; i < 106; i++) {
             itemDataSet.add(i);
         }
 
@@ -29,25 +27,30 @@ public class Main {
         long end;   // used for timers
 
         start = System.currentTimeMillis(); // START LOADING
-        Map<Integer, User> userRatings = loadDataUserItem();
+        Map<Integer, User> userRatings = loadDataMovieLens();
         end = System.currentTimeMillis();   // ENDED LOADING
         System.out.println( String.format("loading data took %f seconds", (end-start) / 1000.0 ) );
 
         Map<String, DeviationModel> deviationModels = new ConcurrentHashMap<>();
         start = System.currentTimeMillis(); // START CALCULATING DEVIATION
-        for(Integer id : itemDataSet) {
-            Parallel.For(itemDataSet, pid -> {
-                if(id.intValue() != pid.intValue()) {
-                    DeviationModel z = calculateDeviation(pid, id, getRatings(userRatings, pid, id));
-                    if (z.getRaters() != 0) {
-                        deviationModels.put(
-                                id + "-" + pid,  // Use as key in map, commented for list
-                                z
-                        );
-                    }
-                }
-            });
-        }
+        itemDataSet.parallelStream()
+                .forEach(item -> {
+                    itemDataSet.parallelStream().filter(innerItem -> {
+                        if(innerItem != item) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }).forEach(innerItem -> {
+                        DeviationModel z = calculateDeviation(innerItem, item, getRatings(userRatings, innerItem, item));
+                        if (z.getRaters() != 0) {
+                            deviationModels.put(
+                                    item + "-" + innerItem,  // Use as key in map, commented for list
+                                    z
+                            );
+                        }
+                    });
+                });
         end = System.currentTimeMillis();  // ENDED CALCULATING DEVIATION
         System.out.println( String.format("calculating divs took %f seconds", (end-start) / 1000.0 ) );
 
