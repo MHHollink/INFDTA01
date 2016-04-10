@@ -1,6 +1,7 @@
 package nl.hro.dta01.lesson.four;
 
 
+import nl.hro.dta01.lesson.four.matrix.Calculator;
 import nl.hro.dta01.lesson.four.model.DeviationModel;
 import nl.hro.dta01.lesson.four.model.User;
 import nl.hro.dta01.lesson.two.model.Tuple;
@@ -15,7 +16,7 @@ import static nl.hro.dta01.lesson.four.matrix.SlopeOne.predictRating;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         List<Integer> itemDataSet = new ArrayList<>();
         for (int i = 1; i < 1682; i++) {
@@ -36,11 +37,7 @@ public class Main {
         itemDataSet.parallelStream()
                 .forEach(item -> {
                     itemDataSet.parallelStream().filter(innerItem -> {
-                        if(innerItem != item) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return innerItem.intValue() != item.intValue();
                     }).forEach(innerItem -> {
                         DeviationModel z = calculateDeviation(innerItem, item, getRatings(userRatings, innerItem, item));
                         if (z.getRaters() != 0) {

@@ -1,4 +1,4 @@
-import com.tantaman.commons.concurrent.Parallel;
+
 import nl.hro.dta01.lesson.four.Importer;
 import nl.hro.dta01.lesson.four.Main;
 import nl.hro.dta01.lesson.four.model.DeviationModel;
@@ -34,19 +34,6 @@ public class Tests {
         dataUserItem = loadDataUserItem();
         deviations = new ConcurrentHashMap<>();
 
-        for(Integer id : itemDataSet) {
-            Parallel.For(itemDataSet, pid -> {
-                if(id.intValue() != pid.intValue()) {
-                    DeviationModel z = calculateDeviation(pid, id, Main.getRatings(dataUserItem, pid, id));
-                    if (z.getRaters() != 0) {
-                        deviations.put(
-                                id + "-" + pid,  // Use as key in map, commented for list
-                                z
-                        );
-                    }
-                }
-            });
-        }
     }
 
     @Test
