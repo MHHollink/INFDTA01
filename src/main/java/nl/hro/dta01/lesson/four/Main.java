@@ -53,7 +53,7 @@ public class Main {
 
         System.out.println(deviationModels.size());
 
-        List<Tuple<Integer, Double>> predictions = Calculator.calculate(userRatings.get(7),deviationModels, itemDataSet, 0);
+        List<Tuple<Integer, Double>> predictions = Calculator.calculate(userRatings.get(7),deviationModels, itemDataSet, 2);
 
         System.out.println(predictions);
 

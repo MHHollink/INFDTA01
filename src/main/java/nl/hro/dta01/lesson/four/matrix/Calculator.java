@@ -60,7 +60,15 @@ public class Calculator {
             if(targetUser.hasRated(i)) continue;
 
             double p = calculate(i, targetUser, deviations);
-            predictions.add(new Tuple<>(i,p));
+
+            if(predictions.size() == max) {
+                for (int j = 0; j < predictions.size(); j++) {
+                    if(predictions.get(j).getB() < p) {
+                        predictions.set(j, new Tuple<>(i,p));
+                    }
+                }
+            } else
+                predictions.add(new Tuple<>(i,p));
         }
 
         return predictions;
