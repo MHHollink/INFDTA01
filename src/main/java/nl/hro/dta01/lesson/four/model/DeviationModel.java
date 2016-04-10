@@ -49,7 +49,9 @@ public class DeviationModel {
     @Override
     public String toString() {
         return "DeviationModel{" +
-                "raters=" + raters +
+                "itemIdA=" + itemIdA +
+                ", itemIdB=" + itemIdB +
+                ", raters=" + raters +
                 ", div=" + div +
                 '}';
     }

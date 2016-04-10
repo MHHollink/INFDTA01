@@ -6,55 +6,76 @@ import nl.hro.dta01.lesson.four.model.DeviationModel;
 import nl.hro.dta01.lesson.four.model.User;
 import nl.hro.dta01.lesson.two.model.Tuple;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static java.lang.String.format;
+import static java.lang.System.currentTimeMillis;
+import static java.lang.System.out;
 import static nl.hro.dta01.lesson.four.Importer.loadDataMovieLens;
+import static nl.hro.dta01.lesson.four.matrix.SlopeOne.calculateDeviation;
 import static nl.hro.dta01.lesson.four.Importer.loadDataUserItem;
 import static nl.hro.dta01.lesson.four.matrix.SlopeOne.*;
 
 public class Main {
 
+    static List<Integer> itemDataSet;
+    static Map<Integer, User> userRatings;
+    static Map<String, DeviationModel> deviationModels;
+
+    static long start; // used for timers
+    static long end;   // used for timers
+
     public static void main(String[] args) throws InterruptedException {
 
-        List<Integer> itemDataSet = new ArrayList<>();
-        //for (int i = 1; i < 1682; i++) {
-        for (int i = 101; i < 107; i++) {
+        itemDataSet = new ArrayList<>();
+        for (int i = 1; i < 1683; i++) {
+        //for (int i = 101; i < 107; i++) {
             itemDataSet.add(i);
         }
 
-        long start; // used for timers
-        long end;   // used for timers
-
+        out.println( "loading data..." );
         start = System.currentTimeMillis(); // START LOADING
-        Map<Integer, User> userRatings = loadDataUserItem();
-        end = System.currentTimeMillis();   // ENDED LOADING
-        System.out.println( String.format("loading data took %f seconds", (end-start) / 1000.0 ) );
 
-        Map<String, DeviationModel> deviationModels = new ConcurrentHashMap<>();
+        userRatings = loadDataMovieLens();
+        end = System.currentTimeMillis();   // ENDED LOADING
+        out.println( format("loading took %f seconds", (end-start) / 1000.0 ) );
+
+        deviationModels = new ConcurrentHashMap<>();
+        out.println( "calculating..." );
         start = System.currentTimeMillis(); // START CALCULATING DEVIATION
         itemDataSet.parallelStream()
                 .forEach(item -> {
-                    itemDataSet.parallelStream().filter(innerItem -> {
-                        return innerItem.intValue() != item.intValue();
-                    }).forEach(innerItem -> {
+                    itemDataSet.parallelStream().filter(innerItem -> innerItem.intValue() != item.intValue()).forEach(innerItem -> {
                         DeviationModel z = calculateDeviation(innerItem, item, getRatings(userRatings, innerItem, item));
-                        if (z.getRaters() != 0) {
-                            deviationModels.put(
-                                    item + "-" + innerItem,  // Use as key in map, commented for list
-                                    z
-                            );
-                            System.out.println(item + "-" + innerItem + ": " + z.toString());
-                        }
+                        deviationModels.put(
+                                item + "-" + innerItem,  // Use as key in map, commented for list
+                                z
+                        );
                     });
                 });
         end = System.currentTimeMillis();  // ENDED CALCULATING DEVIATION
-        System.out.println( String.format("calculating divs took %f seconds", (end-start) / 1000.0 ) );
+        out.println(format("calculating took %f seconds", (end-start) / 1000.0 ) );
 
-        System.out.println(deviationModels.size());
+        /** SMALL SET **/
+//        out.println(format("We predict that user %d would rate item %d with a %f rating",7,101,predictOne(7,101)));
+//        out.println(format("We predict that user %d would rate item %d with a %f rating", 7,103,predictOne(7,103)));
+//        out.println(format("We predict that user %d would rate item %d with a %f rating", 7,106,predictOne(7,106)));
+//        out.println(format("We predict that user %d would rate item %d with a %f rating", 3,103,predictOne(3,103)));
+//        out.println(format("We predict that user %d would rate item %d with a %f rating", 3,105,predictOne(3,105)));
 
-        List<Tuple<Integer, Double>> predictions = Calculator.calculate(userRatings.get(7),deviationModels, itemDataSet, 2);
+        // TODO, update user 3 rating, recalculate user 7.
 
+        /** BIG SET **/
+
+        out.println( "predicting..." );
+        start = currentTimeMillis();
+        List< Tuple<Integer, Double>> predictions = predictList(186, 5);
+        end = currentTimeMillis();
+        out.println(format("predicting took %f seconds", (end-start) / 1000.0 ) );
         System.out.println(predictions);
 
         // Add new rating and update deviations
@@ -118,5 +139,13 @@ public class Main {
         return newDeviationsModels;
     }
 
+
+    public static List<Tuple<Integer,Double>> predictList(int id, int n) {
+        return Calculator.calculate(userRatings.get(id), deviationModels, itemDataSet, n);
+    }
+
+    public static double predictOne(int id, int item) {
+        return Calculator.calculate(item, userRatings.get(id), deviationModels);
+    }
 
 }
