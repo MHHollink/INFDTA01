@@ -1,6 +1,5 @@
 package nl.hro.dta01.lesson.two.importer;
 
-import com.j256.ormlite.stmt.query.In;
 import nl.hro.dta01.lesson.two.model.UserPreference;
 
 import java.io.FileNotFoundException;

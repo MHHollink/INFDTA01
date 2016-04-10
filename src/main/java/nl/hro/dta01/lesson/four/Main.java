@@ -2,6 +2,7 @@ package nl.hro.dta01.lesson.four;
 
 
 import com.tantaman.commons.concurrent.Parallel;
+import nl.hro.dta01.lesson.four.matrix.Calculator;
 import nl.hro.dta01.lesson.four.model.DeviationModel;
 import nl.hro.dta01.lesson.four.model.User;
 import nl.hro.dta01.lesson.two.model.Tuple;
@@ -19,8 +20,8 @@ public class Main {
     public static void main(String[] args) {
 
         List<Integer> itemDataSet = new ArrayList<>();
-        for (int i = 1; i < 1682; i++) {
-        //for (int i = 101; i < 106; i++) {
+        //for (int i = 1; i < 1682; i++) {
+        for (int i = 101; i < 106; i++) {
             itemDataSet.add(i);
         }
 
@@ -28,7 +29,7 @@ public class Main {
         long end;   // used for timers
 
         start = System.currentTimeMillis(); // START LOADING
-        Map<Integer, User> userRatings = loadDataMovieLens();
+        Map<Integer, User> userRatings = loadDataUserItem();
         end = System.currentTimeMillis();   // ENDED LOADING
         System.out.println( String.format("loading data took %f seconds", (end-start) / 1000.0 ) );
 
@@ -51,6 +52,9 @@ public class Main {
         System.out.println( String.format("calculating divs took %f seconds", (end-start) / 1000.0 ) );
 
         System.out.println(deviationModels.size());
+
+        List<Tuple<Integer, Double>> predictions = Calculator.calculate(userRatings.get(6),deviationModels, 0);
+
     }
 
     /**

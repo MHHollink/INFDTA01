@@ -1,6 +1,5 @@
 package nl.hro.dta01.lesson.four.matrix;
 
-import com.tantaman.commons.concurrent.Parallel;
 import nl.hro.dta01.lesson.four.model.DeviationModel;
 import nl.hro.dta01.lesson.four.model.User;
 import nl.hro.dta01.lesson.two.model.Tuple;
@@ -26,11 +25,12 @@ public class Calculator {
 
         List<DeviationModel> dev = new ArrayList<>();
 
-        Parallel.For(deviations.keySet(), (item) -> {
+        for (String item : deviations.keySet()) {
+
             if (Integer.parseInt(item.split("-")[0]) == (itemId)) {
                 dev.add(deviations.get(item));
             }
-        });
+        }
 
         return SlopeOne.predictRating(
                     targetUser.getRatings(),
@@ -50,19 +50,19 @@ public class Calculator {
 
         List<Tuple<Integer, Double>> predictions = new ArrayList<>();
 
-        Parallel.For(targetUser.getRatings(), (rating) -> {
+        for (int i = 0; i < targetUser.getRatings().size(); i++) {
             double prediction = calculate(
-                    rating.getA(), // Id for rating
+                    targetUser.getRatings().get(i).getA(),
                     targetUser,
                     deviations
             );
             predictions.add(
                     new Tuple<>(
-                            rating.getA(),
+                            targetUser.getRatings().get(i).getA(),
                             prediction
                     )
             );
-        });
+        }
 
         return predictions;
     }
