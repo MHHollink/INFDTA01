@@ -18,8 +18,8 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
 
         List<Integer> itemDataSet = new ArrayList<>();
-        for (int i = 1; i < 1682; i++) {
-        //for (int i = 101; i < 106; i++) {
+        //for (int i = 1; i < 1682; i++) {
+        for (int i = 101; i < 107; i++) {
             itemDataSet.add(i);
         }
 
@@ -53,10 +53,12 @@ public class Main {
 
         System.out.println(deviationModels.size());
 
+        List<Tuple<Integer, Double>> predictions = Calculator.calculate(userRatings.get(7),deviationModels, itemDataSet, 0);
+
+        System.out.println(predictions);
+
+        // Add new rating and update deviations
         Map<String,DeviationModel> newDeviations = addRating(3,103,5.0, userRatings, deviationModels, itemDataSet);
-
-        List<Tuple<Integer, Double>> predictions = Calculator.calculate(userRatings.get(6),deviationModels, 0);
-
     }
 
     /**

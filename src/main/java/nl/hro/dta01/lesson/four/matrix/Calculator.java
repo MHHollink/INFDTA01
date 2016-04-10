@@ -4,9 +4,9 @@ import nl.hro.dta01.lesson.four.model.DeviationModel;
 import nl.hro.dta01.lesson.four.model.User;
 import nl.hro.dta01.lesson.two.model.Tuple;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static java.util.Collections.sort;
 
 /**
  * The Calculator that predicts the ratings for a user.
@@ -24,16 +24,22 @@ public class Calculator {
     public static double calculate(int itemId, User targetUser, Map<String, DeviationModel> deviations) {
 
         List<DeviationModel> dev = new ArrayList<>();
+        List<Tuple<Integer, Double>> ratings = targetUser.getRatings();
 
         for (String item : deviations.keySet()) {
 
-            if (Integer.parseInt(item.split("-")[0]) == (itemId)) {
+            if (
+                    Integer.parseInt( item.split("-")[0] ) == (itemId) &&
+                    targetUser.hasRated(Integer.parseInt( item.split("-")[1] ))) {
                 dev.add(deviations.get(item));
             }
         }
 
+        sort(dev, (a, b) -> a.getItemIdA() > b.getItemIdA() ? 1 : -1);
+        sort(ratings, (a, b) -> a.getA() > b.getA() ? 1 : -1);
+
         return SlopeOne.predictRating(
-                    targetUser.getRatings(),
+                    ratings,
                     dev
         );
     }
@@ -46,22 +52,15 @@ public class Calculator {
      * @return
      *          list of tuple's containing item id en predicted rating
      */
-    public static List<Tuple<Integer, Double>> calculate(User targetUser, Map<String, DeviationModel> deviations, int max) {
+    public static List<Tuple<Integer, Double>> calculate(User targetUser, Map<String, DeviationModel> deviations, List<Integer> itemIds, int max) {
 
         List<Tuple<Integer, Double>> predictions = new ArrayList<>();
 
-        for (int i = 0; i < targetUser.getRatings().size(); i++) {
-            double prediction = calculate(
-                    targetUser.getRatings().get(i).getA(),
-                    targetUser,
-                    deviations
-            );
-            predictions.add(
-                    new Tuple<>(
-                            targetUser.getRatings().get(i).getA(),
-                            prediction
-                    )
-            );
+        for (Integer i : itemIds) {
+            if(targetUser.hasRated(i)) continue;
+
+            double p = calculate(i, targetUser, deviations);
+            predictions.add(new Tuple<>(i,p));
         }
 
         return predictions;
